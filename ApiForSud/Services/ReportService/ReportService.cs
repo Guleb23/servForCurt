@@ -1,6 +1,5 @@
 ﻿using ApiForSud.Data;
 using ApiForSud.DTOs.ForReport;
-using ApiForSud.Migrations;
 using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
 

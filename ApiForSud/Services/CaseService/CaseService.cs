@@ -1,6 +1,5 @@
 ﻿using ApiForSud.Data;
 using ApiForSud.DTOs;
-using ApiForSud.Migrations;
 using ApiForSud.Models.DatabaseModels;
 using ApiForSud.Services.CurtInstanceService;
 using Microsoft.EntityFrameworkCore;

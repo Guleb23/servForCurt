@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiForSud.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251026013457_addIsntaceAndCase")]
-    partial class addIsntaceAndCase
+    [Migration("20251226031059_create")]
+    partial class create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,15 @@ namespace ApiForSud.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("ArchivedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CurtId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("DateOfCurt")
                         .HasColumnType("timestamp with time zone");
 
@@ -45,11 +54,23 @@ namespace ApiForSud.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("NameOfCurt")
+                    b.Property<bool>("IsArhcived")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMarkeredByAdmin")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsNotificated")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsUnMarkeredByAdmin")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NomerOfCase")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("NomerOfCase")
+                    b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -61,9 +82,69 @@ namespace ApiForSud.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Third")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("CurtId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Cases");
+                });
+
+            modelBuilder.Entity("ApiForSud.Models.DatabaseModels.Curt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Curts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Железнодорожный районный суд"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Киевский районный суд"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Верховный суд РК"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Верховный суд РФ"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Симферопольский районный суд"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Арбитражный суд РК"
+                        });
                 });
 
             modelBuilder.Entity("ApiForSud.Models.DatabaseModels.CurtInstance", b =>
@@ -74,6 +155,9 @@ namespace ApiForSud.Migrations
 
                     b.Property<Guid>("CaseId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DateOfResult")
                         .HasColumnType("timestamp with time zone");
@@ -94,6 +178,10 @@ namespace ApiForSud.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("NameOfCurt")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Report")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -134,6 +222,11 @@ namespace ApiForSud.Migrations
                         {
                             Id = 2,
                             Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Director"
                         });
                 });
 
@@ -142,6 +235,12 @@ namespace ApiForSud.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FIO")
+                        .HasColumnType("text");
 
                     b.Property<string>("Login")
                         .HasColumnType("text");
@@ -163,6 +262,25 @@ namespace ApiForSud.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ApiForSud.Models.DatabaseModels.Case", b =>
+                {
+                    b.HasOne("ApiForSud.Models.DatabaseModels.Curt", "Curt")
+                        .WithMany("Cases")
+                        .HasForeignKey("CurtId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiForSud.Models.DatabaseModels.User", "User")
+                        .WithMany("UserCases")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curt");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ApiForSud.Models.DatabaseModels.CurtInstance", b =>
                 {
                     b.HasOne("ApiForSud.Models.DatabaseModels.Case", "Case")
@@ -177,6 +295,16 @@ namespace ApiForSud.Migrations
             modelBuilder.Entity("ApiForSud.Models.DatabaseModels.Case", b =>
                 {
                     b.Navigation("CurtInstances");
+                });
+
+            modelBuilder.Entity("ApiForSud.Models.DatabaseModels.Curt", b =>
+                {
+                    b.Navigation("Cases");
+                });
+
+            modelBuilder.Entity("ApiForSud.Models.DatabaseModels.User", b =>
+                {
+                    b.Navigation("UserCases");
                 });
 #pragma warning restore 612, 618
         }

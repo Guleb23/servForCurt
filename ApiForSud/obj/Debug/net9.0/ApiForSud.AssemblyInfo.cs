@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApiForSud")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc581901b94f6b04c80f903d035686a7eeef9e04")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+75bfbf36946aa7a97494ceaef92ae333204f2c40")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApiForSud")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApiForSud")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
